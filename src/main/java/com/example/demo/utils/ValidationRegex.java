@@ -10,5 +10,11 @@ public class ValidationRegex {
         Matcher matcher = pattern.matcher(target);
         return matcher.find();
     }
+
+    public static boolean isRegexPhoneNumber(String number) {
+        Pattern pattern = Pattern.compile("\\d{3}-\\d{4}-\\d{4}");
+        Matcher matcher = pattern.matcher(number);
+        return matcher.find();
+    }
 }
 

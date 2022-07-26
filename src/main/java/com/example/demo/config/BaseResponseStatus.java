@@ -27,7 +27,6 @@ public enum BaseResponseStatus {
 
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
-    POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
 
     POST_POSTS_INVALID_CONTENTS(false, 2018, "내용의 글자수를 확인해주세요."),
@@ -35,6 +34,14 @@ public enum BaseResponseStatus {
 
     POST_USERS_EMPTY_PASSWORD(false, 2030, "비밀번호를 입력해주세요."),
     POST_USERS_INVALID_PASSWORD(false, 2031, "비밀번호 형식을 확인해주세요."),
+
+    POST_USERS_UNMATCH_PASSWORD(false, 2032, "비밀번호를 다시 확인해주세요."),
+    POST_USERS_EMPTY_INFO(false, 2033, "모든 정보를 입력해주세요."),
+    POST_USERS_INVALID_EMAIL(false, 2034, "이메일 형식을 확인해주세요."),
+    POST_USERS_INVALID_PHONE(false,2035, "전화번호 형식을 확인해주세요." ),
+    POST_USERS_EXISTS_ID(false,2036,"이미 존재하는 아이디입니다."),
+    POST_USERS_EXISTS_NICKNAME(false,2037,"이미 존재하는 닉네임입니다."),
+    POST_USERS_EXISTS_EMAIL2(false,2038,"이미 존재하는 이메일입니다."),
 
 
     /**
