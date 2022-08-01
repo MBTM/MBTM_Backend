@@ -2,8 +2,6 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.config.BaseException;
-
-import com.example.demo.src.user.model.PatchUserReq;
 import com.example.demo.src.user.model.PostUserReq;
 import com.example.demo.src.user.model.PostUserRes;
 import com.example.demo.utils.JwtService;
@@ -12,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -35,16 +35,30 @@ public class UserService {
 
 
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
-        // 이메일 중복 확인
-        if(userProvider.checkEmail(postUserReq.getEmail()) ==1){
-            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+
+        ArrayList<Integer> checkList = new ArrayList<Integer>(userProvider.check(postUserReq.getId(),postUserReq.getNickName(),postUserReq.getEmail()));
+
+        // id, nickName, email 중복체크
+        if(checkList.get(0) == 1){
+            throw new BaseException(POST_USERS_EXISTS_ID);
+        }
+        else if (checkList.get(1) == 1){
+            throw new BaseException(POST_USERS_EXISTS_NICKNAME);
+        }
+        else if (checkList.get(2) == 1){
+            throw new BaseException(POST_USERS_EXISTS_EMAIL2);
+        }
+
+        // 비밀번호와 비밀번호 확인이 다를경우 발생
+        if(postUserReq.getPassword().equals(postUserReq.getPasswordForCheck()) == false){
+            throw new BaseException(POST_USERS_UNMATCH_PASSWORD);
         }
 
         String pwd;
         try{
-            //암호화                                          //비번 암호화하고 모델에 비번 set으로 바꾸기
-            System.out.println(postUserReq.getPassword());
-            pwd = new SHA256().encrypt(postUserReq.getPassword());  postUserReq.setPassword(pwd);
+            //암호화
+            pwd = new SHA256().encrypt(postUserReq.getPassword());
+            postUserReq.setPassword(pwd);
             int userIdx = userDao.createUser(postUserReq);
             //System.out.println(userIdx);
             return new PostUserRes(userIdx);
@@ -63,15 +77,15 @@ public class UserService {
 //        }
     }
 
-    public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
-        try{
-            int result = userDao.modifyUserName(patchUserReq);
-            if(result == 0){
-                throw new BaseException(MODIFY_FAIL_USERNAME);
-            }
-        } catch(Exception exception){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
+//    public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
+//        try{
+//            int result = userDao.modifyUserName(patchUserReq);
+//            if(result == 0){
+//                throw new BaseException(MODIFY_FAIL_USERNAME);
+//            }
+//        } catch(Exception exception){
+//            throw new BaseException(DATABASE_ERROR);
+//        }
+//    }
 
 }

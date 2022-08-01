@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
@@ -32,28 +33,36 @@ public class UserProvider {
         this.jwtService = jwtService;
     }
 
-
-    public GetUserFeedRes retrieveUserFeed(int userIdxByjwt, int userIdx) throws BaseException{
-        Boolean isMyFeed = true;
-
-        if(checkUserExist(userIdx) == 0)
-        {
-            throw new BaseException(USERS_EMPTY_USER_ID);
-        }
-
+    public ArrayList<Integer> check(String id, String nickName, String email) throws BaseException{
         try{
-            if(userIdxByjwt != userIdx)
-                isMyFeed = false;
-
-            GetUserInfoRes getUserInfoRes = userDao.selectUserInfo(userIdx);
-            List<GetUserPostsRes> getUserPosts = userDao.selectUserPosts(userIdx);
-            GetUserFeedRes getUsersRes = new GetUserFeedRes(isMyFeed, getUserInfoRes, getUserPosts);
-            return getUsersRes;
-        }
-        catch (Exception exception) {
+            return userDao.checkInfo(id, nickName, email);
+        } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
-                    }
+    }
+
+
+//    public GetUserFeedRes retrieveUserFeed(int userIdxByjwt, int userIdx) throws BaseException{
+//        Boolean isMyFeed = true;
+//
+//        if(checkUserExist(userIdx) == 0)
+//        {
+//            throw new BaseException(USERS_EMPTY_USER_ID);
+//        }
+//
+//        try{
+//            if(userIdxByjwt != userIdx)
+//                isMyFeed = false;
+//
+//            GetUserInfoRes getUserInfoRes = userDao.selectUserInfo(userIdx);
+//            List<GetUserPostsRes> getUserPosts = userDao.selectUserPosts(userIdx);
+//            GetUserFeedRes getUsersRes = new GetUserFeedRes(isMyFeed, getUserInfoRes, getUserPosts);
+//            return getUsersRes;
+//        }
+//        catch (Exception exception) {
+//            throw new BaseException(DATABASE_ERROR);
+//        }
+//                    }
 
 
 //    public GetUserFeedRes getUsersByIdx(int userIdx) throws BaseException{
@@ -67,21 +76,13 @@ public class UserProvider {
 //    }
 
 
-    public int checkEmail(String email) throws BaseException{
-        try{
-            return userDao.checkEmail(email);
-        } catch (Exception exception){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public int checkUserExist(int userIdx) throws BaseException{
-        try{
-            return userDao.checkUserExist(userIdx);
-        } catch (Exception exception){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
+//    public int checkUserExist(int userIdx) throws BaseException{
+//        try{
+//            return userDao.checkUserExist(userIdx);
+//        } catch (Exception exception){
+//            throw new BaseException(DATABASE_ERROR);
+//        }
+//    }
 
 
 
