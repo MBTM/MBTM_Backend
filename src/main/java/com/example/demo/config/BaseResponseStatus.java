@@ -42,6 +42,7 @@ public enum BaseResponseStatus {
     POST_USERS_EXISTS_ID(false,2036,"이미 존재하는 아이디입니다."),
     POST_USERS_EXISTS_NICKNAME(false,2037,"이미 존재하는 닉네임입니다."),
     POST_USERS_EXISTS_EMAIL2(false,2038,"이미 존재하는 이메일입니다."),
+    POST_USERS_NOT_EXISTS_ID(false,2039,"존재하지 않는 계정입니다."),
 
 
     /**

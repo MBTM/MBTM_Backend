@@ -2,9 +2,7 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.user.model.GetUserFeedRes;
-import com.example.demo.src.user.model.GetUserInfoRes;
-import com.example.demo.src.user.model.GetUserPostsRes;
+import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
-import static com.example.demo.config.BaseResponseStatus.USERS_EMPTY_USER_ID;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 //Provider : Read의 비즈니스 로직 처리
 @Service
@@ -36,6 +33,20 @@ public class UserProvider {
     public ArrayList<Integer> check(String id, String nickName, String email) throws BaseException{
         try{
             return userDao.checkInfo(id, nickName, email);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostUserRes checkId(String nickName, String email) throws BaseException{
+        ArrayList<Integer> checkList = new ArrayList<Integer>(userDao.checkInfo(null, nickName, email));
+        System.out.println(checkList);
+
+        if(checkList.get(3) == 0) {
+            throw new BaseException(POST_USERS_NOT_EXISTS_ID);
+        }
+        try{
+                return userDao.selectIdByNicknameEmail(nickName, email);
         } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
