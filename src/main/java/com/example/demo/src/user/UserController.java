@@ -43,12 +43,11 @@ public class UserController {
     @ResponseBody
     @PostMapping("") // (POST) localhost:9000/users
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
-        // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
 
         //System.out.println(postUserReq.getId().getClass().getName());
 
         // 회원가입 정보누락 Body Check
-        if(postUserReq.getId().length() == 0 || postUserReq.getPassword().length() == 0 || postUserReq.getPasswordForCheck().length() == 0 || postUserReq.getName().length() == 0 || postUserReq.getNickName().length() == 0 || postUserReq.getPhone().length() == 0 || postUserReq.getEmail().length() == 0){
+        if(postUserReq.getId().length() == 0 || postUserReq.getPassword().length() == 0 || postUserReq.getPasswordForCheck().length() == 0 || postUserReq.getNickName().length() == 0 || postUserReq.getPhone().length() == 0 || postUserReq.getEmail().length() == 0){
             return new BaseResponse<>(POST_USERS_EMPTY_INFO);
         }
         // 이메일 정규표현
@@ -66,6 +65,37 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+
+    /**
+     * 아이디찾기 API (users)
+     * [POST] /users/searchId
+     * @return BaseResponse<PostUserRes>
+     */
+    // Body
+    @ResponseBody
+    @PostMapping("searchId") // (POST) localhost:9000/users/searchId
+    public BaseResponse<PostUserRes> searchId(@RequestBody PostUserReq postUserReq) {
+
+        if(postUserReq.getNickName().length() == 0 || postUserReq.getEmail().length() == 0){
+            return new BaseResponse<>(POST_USERS_EMPTY_INFO);
+        }
+        // 이메일 정규표현
+        if(!isRegexEmail(postUserReq.getEmail())){
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+        try{
+            //System.out.println(postUserReq.getEmail() + "Asd");
+            PostUserRes postUserRes = userProvider.checkId(postUserReq.getNickName(), postUserReq.getEmail());
+            return new BaseResponse<>(postUserRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+
+
 //        if(postUserReq.getId() == null || postUserReq.getPassword() == null || postUserReq.getPasswordForCheck() == null || postUserReq.getName() == null || postUserReq.getNickName() == null || postUserReq.getPhone() == null || postUserReq.getEmail() == null){
 //        return new BaseResponse<>(POST_USERS_EMPTY_INFO);
 //    }

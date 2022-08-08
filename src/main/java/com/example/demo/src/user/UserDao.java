@@ -22,10 +22,11 @@ public class UserDao {
 
 
     public int createUser(PostUserReq postUserReq){
-        String createUserQuery = "insert into User (id, password, nickName, name, phone, email ) VALUES (?,?,?,?,?,?)";
-        Object[] createUserParams = new Object[]{postUserReq.getId(), postUserReq.getPassword(), postUserReq.getNickName(), postUserReq.getName(), postUserReq.getPhone(),postUserReq.getEmail()};
+        String createUserQuery = "insert into User (id, password, nickName, phone, email ) VALUES (?,?,?,?,?)";
+        Object[] createUserParams = new Object[]{postUserReq.getId(), postUserReq.getPassword(), postUserReq.getNickName(), postUserReq.getPhone(),postUserReq.getEmail()};
         this.jdbcTemplate.update(createUserQuery, createUserParams);
 
+        //last_insert_id 함수는 테이블의 마지막 auto_increment 값을 리턴한다. (mysql)
         String lastInserIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInserIdQuery,int.class);
     }
@@ -35,16 +36,46 @@ public class UserDao {
         String checkIdQuery = "select exists(select id from User where id = ?)";
         String checkNicknameQuery = "select exists(select nickName from User where nickName = ?)";
         String checkEmailQuery = "select exists(select email from User where email = ?)";
+        String checkIdxQuery = "select exists(select userIdx from User where nickName=? AND email = ?)";
+
 
         ArrayList<Integer> check = new ArrayList<Integer>();
 
         check.add(this.jdbcTemplate.queryForObject(checkIdQuery, int.class, id));
         check.add(this.jdbcTemplate.queryForObject(checkNicknameQuery, int.class, nickName));
         check.add(this.jdbcTemplate.queryForObject(checkEmailQuery, int.class, email));
+        check.add(this.jdbcTemplate.queryForObject(checkIdxQuery, int.class, nickName,email));
 
         return(check);
 
     }
+
+
+    public PostUserRes selectIdByNicknameEmail(String nickName, String email){
+
+        String selectIdQuery = "select id\n" +
+                "from User\n" +
+                "where nickName = ? AND email = ?";
+        Object[] checkIdParams = new Object[]{nickName, email};
+
+
+        return this.jdbcTemplate.queryForObject(selectIdQuery, //쿼리포오브젝트는 하나의 객체만 반환할때 사용 그냥 쿼리는 리스트같은거 반환할때사용
+                (rs, rowNum) -> new PostUserRes(
+                        rs.getString("id")),
+                        checkIdParams);
+    }
+
+//    public GetUserFeedRes getUsersByEmail(String email){ //Params인 email은 밑에 ?에 들어갈거임
+//        String getUsersByEmailQuery = "select userIdx,name,nickName,email from User where email=?"; //모델에서 원하는대로
+//        String getUsersByEmailParams = email;                                                    //userIdx,name,nickName,email가 나오게끔 처리함
+//        return this.jdbcTemplate.queryForObject(getUsersByEmailQuery, //쿼리포오브젝트는 하나의 객체만 반환할때 사용 그냥 쿼리는 리스트같은거 반환할때사용
+//                (rs, rowNum) -> new GetUserFeedRes(
+//                        rs.getInt("userIdx"),
+//                        rs.getString("name"),
+//                        rs.getString("nickName"),
+//                        rs.getString("email")),
+//                getUsersByEmailParams);
+//    }
 //            //모델명 함수명(파라메터)
 //    public GetUserInfoRes selectUserInfo(int userIdx){
 //        String selectUsersInfoQuery = "SELECT U.nickName, U.name, F.profileImgUrl, F.introduction, F.followerCount, F.followingCount,F.postCount\n" +

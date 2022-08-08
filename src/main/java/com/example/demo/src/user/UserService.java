@@ -60,9 +60,10 @@ public class UserService {
             pwd = new SHA256().encrypt(postUserReq.getPassword());
             postUserReq.setPassword(pwd);
             int userIdx = userDao.createUser(postUserReq);
-            //System.out.println(userIdx);
-            return new PostUserRes(userIdx);
+            System.out.println("여기4");
+            return new PostUserRes(userIdx, "default");
         } catch (Exception ignored) {
+            System.out.println("여기5");
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
 //        프롬투에서는 회원가입말고 로그인할때 jwt발급했음
@@ -76,6 +77,18 @@ public class UserService {
 //            throw new BaseException(DATABASE_ERROR);
 //        }
     }
+
+//    public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
+//        try{
+//            int result = userDao.modifyUserName(patchUserReq);
+//            if(result == 0){
+//                throw new BaseException(MODIFY_FAIL_USERNAME);
+//            }
+//        } catch(Exception exception){
+//            throw new BaseException(DATABASE_ERROR);
+//        }
+//    }
+
 
 //    public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
 //        try{
