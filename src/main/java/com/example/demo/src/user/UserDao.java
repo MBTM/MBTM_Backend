@@ -22,13 +22,21 @@ public class UserDao {
 
 
     public int createUser(PostUserReq postUserReq){
-        String createUserQuery = "insert into User (id, password, nickName, phone, email ) VALUES (?,?,?,?,?)";
-        Object[] createUserParams = new Object[]{postUserReq.getId(), postUserReq.getPassword(), postUserReq.getNickName(), postUserReq.getPhone(),postUserReq.getEmail()};
+        String createUserQuery = "insert into User (id, password, phone, email) VALUES (?,?,?,?)";
+        Object[] createUserParams = new Object[]{postUserReq.getId(), postUserReq.getPassword(), postUserReq.getPhone(),postUserReq.getEmail()};
         this.jdbcTemplate.update(createUserQuery, createUserParams);
 
         //last_insert_id 함수는 테이블의 마지막 auto_increment 값을 리턴한다. (mysql)
         String lastInserIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInserIdQuery,int.class);
+    }
+
+    public int createUserNickname(PostUserReq postUserReq){
+        String modifyUserNicknameQuery = "update User set nickName = ? where userIdx = ? ";
+        Object[] modifyUserNicknameParams = new Object[]{postUserReq.getNickName(), postUserReq.getUserIdx()};
+        this.jdbcTemplate.update(modifyUserNicknameQuery,modifyUserNicknameParams);
+
+        return postUserReq.getUserIdx();
     }
 
     public ArrayList<Integer> checkInfo(String id, String nickName, String email){

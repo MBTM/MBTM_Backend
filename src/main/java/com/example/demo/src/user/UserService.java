@@ -42,9 +42,6 @@ public class UserService {
         if(checkList.get(0) == 1){
             throw new BaseException(POST_USERS_EXISTS_ID);
         }
-        else if (checkList.get(1) == 1){
-            throw new BaseException(POST_USERS_EXISTS_NICKNAME);
-        }
         else if (checkList.get(2) == 1){
             throw new BaseException(POST_USERS_EXISTS_EMAIL2);
         }
@@ -61,7 +58,9 @@ public class UserService {
             postUserReq.setPassword(pwd);
             int userIdx = userDao.createUser(postUserReq);
             System.out.println("여기4");
-            return new PostUserRes(userIdx, "default");
+            //jwt 발급.
+            String jwt = jwtService.createJwt(userIdx);
+            return new PostUserRes(jwt,userIdx,"default" );
         } catch (Exception ignored) {
             System.out.println("여기5");
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
@@ -76,6 +75,23 @@ public class UserService {
 //        } catch (Exception exception) {
 //            throw new BaseException(DATABASE_ERROR);
 //        }
+    }
+
+    public PostUserRes createNickname(PostUserReq postUserReq) throws BaseException {
+        String nickName = postUserReq.getNickName();
+        ArrayList<Integer> checkList = new ArrayList<Integer>(userProvider.check(null , nickName, null));
+
+        //닉네임 중복검사
+        if(checkList.get(1) == 1){
+            throw new BaseException(POST_USERS_EXISTS_NICKNAME);
+        }
+
+        try{
+            int userIdx = userDao.createUserNickname(postUserReq);
+            return new PostUserRes("default", userIdx,"default" );
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
 //    public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {

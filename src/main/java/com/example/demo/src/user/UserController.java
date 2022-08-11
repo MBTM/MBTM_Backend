@@ -47,7 +47,7 @@ public class UserController {
         //System.out.println(postUserReq.getId().getClass().getName());
 
         // 회원가입 정보누락 Body Check
-        if(postUserReq.getId().length() == 0 || postUserReq.getPassword().length() == 0 || postUserReq.getPasswordForCheck().length() == 0 || postUserReq.getNickName().length() == 0 || postUserReq.getPhone().length() == 0 || postUserReq.getEmail().length() == 0){
+        if(postUserReq.getId().length() == 0 || postUserReq.getPassword().length() == 0 || postUserReq.getPasswordForCheck().length() == 0 || postUserReq.getPhone().length() == 0 || postUserReq.getEmail().length() == 0){
             return new BaseResponse<>(POST_USERS_EMPTY_INFO);
         }
         // 이메일 정규표현
@@ -68,6 +68,37 @@ public class UserController {
 
 
     /**
+     * 닉네임설정 API
+     * [POST] /users/nickName
+     * @return BaseResponse<PostUserRes>
+     */
+    @ResponseBody
+    @PostMapping("nickName") // (POST) localhost:9000/users/nickName
+    public BaseResponse<PostUserRes> createUserNickname(@RequestBody PostUserReq postUserReq){
+        try {
+            //jwt에서 idx 추출.
+            int userIdxByJwt = jwtService.getUserIdx();
+            int userIdx = postUserReq.getUserIdx();
+
+            // 정보누락 유효성검사
+            if(postUserReq.getNickName().length() == 0 ){
+                return new BaseResponse<>(POST_USERS_EMPTY_INFO);
+            }
+            // 실제 Idx와 jwt로 추출한 Idx가 맞는지 유효성검사
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            PostUserRes postUserRes = userService.createNickname(postUserReq);
+            return new BaseResponse<>(postUserRes);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+    /**
      * 아이디찾기 API (users)
      * [POST] /users/searchId
      * @return BaseResponse<PostUserRes>
@@ -77,7 +108,7 @@ public class UserController {
     @PostMapping("searchId") // (POST) localhost:9000/users/searchId
     public BaseResponse<PostUserRes> searchId(@RequestBody PostUserReq postUserReq) {
 
-        if(postUserReq.getNickName().length() == 0 || postUserReq.getEmail().length() == 0){
+        if(postUserReq.getEmail().length() == 0){
             return new BaseResponse<>(POST_USERS_EMPTY_INFO);
         }
         // 이메일 정규표현
@@ -87,6 +118,7 @@ public class UserController {
         try{
             //System.out.println(postUserReq.getEmail() + "Asd");
             PostUserRes postUserRes = userProvider.checkId(postUserReq.getNickName(), postUserReq.getEmail());
+
             return new BaseResponse<>(postUserRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
