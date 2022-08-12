@@ -16,4 +16,5 @@ public class PostUserReq {
     private String phone;
     private String email;
     private int userIdx;
+    private String mbti;
 }

@@ -69,7 +69,6 @@ public class UserService {
 //        try{
 //            int userIdx = userDao.createUser(postUserReq);
 //            //jwt 발급.
-//            // TODO: jwt는 다음주차에서 배울 내용입니다!
 //            String jwt = jwtService.createJwt(userIdx);
 //            return new PostUserRes(jwt,userIdx);
 //        } catch (Exception exception) {
@@ -88,6 +87,23 @@ public class UserService {
 
         try{
             int userIdx = userDao.createUserNickname(postUserReq);
+            return new PostUserRes("default", userIdx,"default" );
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostUserRes createMbti(PostUserReq postUserReq) throws BaseException {
+//        String mbti = postUserReq.getMbti();
+//        ArrayList<Integer> checkList = new ArrayList<Integer>(userProvider.check(null , null, null, mbti));
+//
+//        //닉네임 중복검사
+//        if(checkList.get(1) == 1){
+//            throw new BaseException(POST_USERS_EXISTS_NICKNAME);
+//        }
+
+        try{
+            int userIdx = userDao.createUserMbti(postUserReq);
             return new PostUserRes("default", userIdx,"default" );
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
