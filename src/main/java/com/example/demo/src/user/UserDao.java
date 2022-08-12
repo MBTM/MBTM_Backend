@@ -39,6 +39,14 @@ public class UserDao {
         return postUserReq.getUserIdx();
     }
 
+    public int createUserMbti(PostUserReq postUserReq){
+        String modifyMbtiQuery = "update User set mbti = ? where userIdx = ? ";
+        Object[] modifyUserMbtiParams = new Object[]{postUserReq.getMbti(), postUserReq.getUserIdx()};
+        this.jdbcTemplate.update(modifyMbtiQuery,modifyUserMbtiParams);
+
+        return postUserReq.getUserIdx();
+    }
+
     public ArrayList<Integer> checkInfo(String id, String nickName, String email){
 
         String checkIdQuery = "select exists(select id from User where id = ?)";

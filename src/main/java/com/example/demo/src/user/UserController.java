@@ -99,6 +99,36 @@ public class UserController {
 
 
     /**
+     * MBTI설정 API
+     * [POST] /users/mbti
+     * @return BaseResponse<PostUserRes>
+     */
+    @ResponseBody
+    @PostMapping("mbti") // (POST) localhost:9000/users/mbti
+    public BaseResponse<PostUserRes> createMbti(@RequestBody PostUserReq postUserReq){
+        try {
+            //jwt에서 idx 추출.
+            int userIdxByJwt = jwtService.getUserIdx();
+            int userIdx = postUserReq.getUserIdx();
+
+            // 정보누락 유효성검사
+            if(postUserReq.getMbti().length() == 0 ){
+                return new BaseResponse<>(POST_USERS_EMPTY_INFO);
+            }
+            // 실제 Idx와 jwt로 추출한 Idx가 맞는지 유효성검사
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            PostUserRes postUserRes = userService.createMbti(postUserReq);
+            return new BaseResponse<>(postUserRes);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
      * 아이디찾기 API (users)
      * [POST] /users/searchId
      * @return BaseResponse<PostUserRes>
