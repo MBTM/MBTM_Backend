@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import static com.example.demo.config.BaseResponseStatus.*;
-import static com.example.demo.utils.ValidationRegex.isRegexEmail;
-import static com.example.demo.utils.ValidationRegex.isRegexPhoneNumber;
+import static com.example.demo.utils.ValidationRegex.*;
 
 @RestController
 @RequestMapping("/users")
@@ -57,6 +56,9 @@ public class UserController {
         // 전화번호 정규표현
         if(!isRegexPhoneNumber(postUserReq.getPhone())){
             return new BaseResponse<>(POST_USERS_INVALID_PHONE);
+        }
+        if(!isRegexPassword(postUserReq.getPassword())){
+            return new BaseResponse<>(POST_USERS_INVALID_PASSWORD);
         }
         try{
             PostUserRes postUserRes = userService.createUser(postUserReq);
