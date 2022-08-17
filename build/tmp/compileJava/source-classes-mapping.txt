@@ -8,8 +8,8 @@ com/example/demo/src/auth/model/User.java
  com.example.demo.src.auth.model.User
 com/example/demo/config/Constant.java
  com.example.demo.config.Constant
-com/example/demo/utils/ValidationRegex.java
- com.example.demo.utils.ValidationRegex
+com/example/demo/src/user/UserProvider.java
+ com.example.demo.src.user.UserProvider
 com/example/demo/src/post/PostProvider.java
  com.example.demo.src.post.PostProvider
 com/example/demo/src/user/model/PostLoginRes.java
@@ -52,8 +52,8 @@ com/example/demo/src/auth/AuthProvider.java
  com.example.demo.src.auth.AuthProvider
 com/example/demo/config/BaseResponse.java
  com.example.demo.config.BaseResponse
-com/example/demo/src/auth/AuthController.java
- com.example.demo.src.auth.AuthController
+com/example/demo/src/user/UserService.java
+ com.example.demo.src.user.UserService
 com/example/demo/src/user/model/DeleteUserRes.java
  com.example.demo.src.user.model.DeleteUserRes
 com/example/demo/src/user/model/User.java
@@ -78,9 +78,9 @@ com/example/demo/src/user/UserDao.java
  com.example.demo.src.user.UserDao
 com/example/demo/src/user/model/PostUserReq.java
  com.example.demo.src.user.model.PostUserReq
-com/example/demo/src/user/UserProvider.java
- com.example.demo.src.user.UserProvider
-com/example/demo/src/user/UserService.java
- com.example.demo.src.user.UserService
+com/example/demo/src/auth/AuthController.java
+ com.example.demo.src.auth.AuthController
 com/example/demo/src/user/UserController.java
  com.example.demo.src.user.UserController
+com/example/demo/utils/ValidationRegex.java
+ com.example.demo.utils.ValidationRegex
