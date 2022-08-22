@@ -27,13 +27,13 @@ public class AuthService {
         this.jwtService = jwtService;
 
     }
-            //리턴값 자리
+
     public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException{
-        User user = authDao.getPwd(postLoginReq);
+        User user = authDao.getPwd(postLoginReq.getId());
         String encryptPwd;
 
         try{
-            encryptPwd = new SHA256().encrypt(postLoginReq.getPwd()); //utils패키지에 SHA256에서 암호화 진행
+            encryptPwd = new SHA256().encrypt(postLoginReq.getPassword()); //utils패키지에 SHA256에서 암호화 진행
 
         }catch (Exception exception) {
             throw new BaseException(BaseResponseStatus.PASSWORD_ENCRYPTION_ERROR);
