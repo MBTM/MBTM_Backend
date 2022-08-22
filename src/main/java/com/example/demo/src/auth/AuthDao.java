@@ -17,17 +17,19 @@ public class AuthDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public User getPwd(PostLoginReq postLoginReq){
-        String getPwdQuery = "select userIdx, name ,nickName, email, pwd from User Where email = ?";
-        String getPwdParams = postLoginReq.getEmail();
+    public User getPwd(String Id){
+        System.out.println(Id);
+        String getPwdQuery = "select userIdx, id ,nickName, email, password from User Where id = ?";
+        String getPwdParams = Id;
+        //System.out.println(Id);
 
         return this.jdbcTemplate.queryForObject(getPwdQuery,
                 (rs,rowNum)-> new User(
                         rs.getInt("userIdx"),
-                        rs.getString("name"),
+                        rs.getString("id"),
                         rs.getString("nickName"),
                         rs.getString("email"),
-                        rs.getString("pwd")
+                        rs.getString("password")
                 ),
                 getPwdParams
         );
