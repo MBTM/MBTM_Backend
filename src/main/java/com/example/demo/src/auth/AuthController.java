@@ -3,6 +3,8 @@ package com.example.demo.src.auth;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.config.BaseResponseStatus;
+import com.example.demo.src.auth.model.PostAuthCodeReq;
+import com.example.demo.src.auth.model.PostAuthCodeRes;
 import com.example.demo.src.auth.model.PostLoginReq;
 import com.example.demo.src.auth.model.PostLoginRes;
 import com.example.demo.utils.JwtService;
@@ -31,7 +33,7 @@ public class AuthController {
         //asd
 
     }
-
+    //로그인
     @ResponseBody
     @PostMapping("/login")
     public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
@@ -51,6 +53,47 @@ public class AuthController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+    @ResponseBody
+    @PostMapping("/check/sendSMS")
+    public BaseResponse<PostAuthCodeRes> sendSMS(@RequestBody PostAuthCodeReq postAuthCodeReq) {
+
+        try {
+            if (postAuthCodeReq.getId().length() == 0 || postAuthCodeReq.getPhone().length() == 0) {
+                return new BaseResponse<>(BaseResponseStatus.POST_USERS_EMPTY_INFO);
+            }
+
+            if ( postAuthCodeReq.getPhone().length() != 11){
+                return new BaseResponse<>(BaseResponseStatus.POST_USERS_UNREGEX_PHONE);
+            }
+
+            String id = postAuthCodeReq.getId();
+            String phoneNumber = postAuthCodeReq.getPhone();
+            System.out.println("수신자 번호 : " + phoneNumber);
+//        System.out.println("인증번호 : " + numStr);
+            PostAuthCodeRes postAuthCodeRes = authService.certifiedPhoneNumber(postAuthCodeReq);
+
+            return new BaseResponse<>(postAuthCodeRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+//    @PostMapping("/check/sendSMS")
+//    public @ResponseBody String sendSMS(@RequestBody PostAuthCodeReq postAuthCodeReq) {
+//
+//        Random rand  = new Random();
+//        String numStr = "";
+//        for(int i=0; i<4; i++) {
+//            String ran = Integer.toString(rand.nextInt(10));
+//            numStr+=ran;
+//        }
+//        String phoneNumber = postAuthCodeReq.getPhone();
+//        System.out.println("수신자 번호 : " + phoneNumber);
+//        System.out.println("인증번호 : " + numStr);
+//        authService.certifiedPhoneNumber(phoneNumber,numStr);
+//        return numStr;
+//    }
+
 
 }
-

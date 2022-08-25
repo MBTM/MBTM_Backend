@@ -1,6 +1,7 @@
 package com.example.demo.src.auth;
 
-import com.example.demo.src.auth.model.*;
+import com.example.demo.utils.FormatUtil;
+import com.example.demo.src.auth.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import javax.sql.DataSource;
 public class AuthDao {
 
     private JdbcTemplate jdbcTemplate;
+
 
     @Autowired
     public void setDataSource(DataSource dataSource){
@@ -34,5 +36,20 @@ public class AuthDao {
                 getPwdParams
         );
     }
+
+    public Integer checkInfo(String id, String phone){
+
+        // Static은 ValidationRegex참고하고 여긴 Public으로 끌고옴
+        // 01000000000 -> 010-0000-0000으로 형변환
+        FormatUtil formatUtils = new FormatUtil();
+        String phoneForDBRegex = formatUtils.phoneFormat(phone);
+
+        String checkIdQuery = "select userIdx from User where id = ? and phone = ?";
+        Integer result = this.jdbcTemplate.queryForObject(checkIdQuery, int.class, id, phoneForDBRegex);
+
+        return(result);
+    }
+
+
 
 }
