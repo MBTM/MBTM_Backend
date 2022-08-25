@@ -1,6 +1,7 @@
 package com.example.demo.src.user;
 
 
+import com.example.demo.src.auth.model.PostAuthCodeRes;
 import com.example.demo.src.user.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -80,6 +81,8 @@ public class UserDao {
                         rs.getString("id")),
                         checkIdParams);
     }
+
+
 
 //    public GetUserFeedRes getUsersByEmail(String email){ //Params인 email은 밑에 ?에 들어갈거임
 //        String getUsersByEmailQuery = "select userIdx,name,nickName,email from User where email=?"; //모델에서 원하는대로

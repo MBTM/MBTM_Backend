@@ -44,6 +44,7 @@ public enum BaseResponseStatus {
     POST_USERS_EXISTS_NICKNAME(false,2037,"이미 존재하는 닉네임입니다."),
     POST_USERS_EXISTS_EMAIL2(false,2038,"이미 존재하는 이메일입니다."),
     POST_USERS_NOT_EXISTS_ID(false,2039,"존재하지 않는 계정입니다."),
+    POST_USERS_UNREGEX_PHONE(false,2040,"휴대폰 번호를 확인해주세요."),
 
 
     /**
@@ -55,6 +56,9 @@ public enum BaseResponseStatus {
     // [POST] /users
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
+
+    // [POST] /auth
+    FAILED_TO_SEND_SNS_AUTH_CODE(false,3015,"인증코드를 보내는데 실패하였습니다."),
 
 
 

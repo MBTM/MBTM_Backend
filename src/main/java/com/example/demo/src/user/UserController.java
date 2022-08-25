@@ -162,7 +162,7 @@ public class UserController {
 
 //        if(postUserReq.getId() == null || postUserReq.getPassword() == null || postUserReq.getPasswordForCheck() == null || postUserReq.getName() == null || postUserReq.getNickName() == null || postUserReq.getPhone() == null || postUserReq.getEmail() == null){
 //        return new BaseResponse<>(POST_USERS_EMPTY_INFO);
-//    }
+}
 //    /**
 //     * 유저피드조회 API
 //     * [GET] /users/:userIdx
@@ -179,7 +179,7 @@ public class UserController {
 //            return new BaseResponse<>((exception.getStatus()));
 //        }
 //    }
-
-
-
-}
+//
+//
+//
+//}
