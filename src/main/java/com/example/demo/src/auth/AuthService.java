@@ -36,6 +36,11 @@ public class AuthService {
     }
 
     public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException{
+
+        if (authDao.checkId(postLoginReq.getId()) == 0){
+            throw new BaseException(BaseResponseStatus.POST_USERS_NOT_EXISTS_ID);
+        }
+
         User user = authDao.getPwd(postLoginReq.getId());
         String encryptPwd;
 
@@ -92,6 +97,29 @@ public class AuthService {
             System.out.println(e.getMessage());
             System.out.println(e.getCode());
         } throw new BaseException(BaseResponseStatus.FAILED_TO_SEND_SNS_AUTH_CODE);
+    }
+
+    public PostAuthPasswordCheckRes updatePassword(PostAuthPasswordCheckReq postAuthPasswordCheckReq) throws BaseException {
+
+        int userIdx = postAuthPasswordCheckReq.getUserIdx();
+        String jwt = jwtService.createJwt(userIdx);
+
+        if (authDao.updateUserPassword(postAuthPasswordCheckReq) == null) {
+            throw new BaseException(BaseResponseStatus.POST_USERS_NOT_EXISTS_ID);
+        }
+        String pwd;
+        try {
+            //암호화
+            pwd = new SHA256().encrypt(postAuthPasswordCheckReq.getPassword());
+            postAuthPasswordCheckReq.setPassword(pwd);
+            authDao.updateUserPassword(postAuthPasswordCheckReq);
+
+            return new PostAuthPasswordCheckRes(userIdx, jwt);
+        } catch (Exception exception) {
+            throw new BaseException(BaseResponseStatus.FAILED_TO_UPDATE_PASSWORD);
+
+
+        }
     }
 
 //    public void certifiedPhoneNumber(String phoneNumber, String cerNum) {

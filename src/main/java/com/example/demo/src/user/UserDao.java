@@ -1,7 +1,6 @@
 package com.example.demo.src.user;
 
 
-import com.example.demo.src.auth.model.PostAuthCodeRes;
 import com.example.demo.src.user.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class UserDao {
@@ -80,6 +78,24 @@ public class UserDao {
                 (rs, rowNum) -> new PostUserRes(
                         rs.getString("id")),
                         checkIdParams);
+    }
+
+    public int selectPwdByIdxForCompare(int userIdx, String comparePwd){
+        String selectPwdForCompareQuery = "select exists(select userIdx from User where userIdx = ? and password = ?)";
+        Object[] selectPwdForCompareParams = new Object[]{userIdx, comparePwd};
+
+        return this.jdbcTemplate.queryForObject(selectPwdForCompareQuery, int.class, selectPwdForCompareParams);
+
+    }
+
+    public void updateUserPwd(String comparePwd, int userIdx){
+        String modifyUserPasswordQuery = "update User set password = ? where userIdx = ? ";
+        Object[] modifyUserPasswordParams = new Object[]{comparePwd, userIdx};
+        this.jdbcTemplate.update(modifyUserPasswordQuery,modifyUserPasswordParams);
+
+
+        return;
+
     }
 
 

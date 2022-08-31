@@ -57,6 +57,7 @@ public class UserController {
         if(!isRegexPhoneNumber(postUserReq.getPhone())){
             return new BaseResponse<>(POST_USERS_INVALID_PHONE);
         }
+        // 비밀번호 정규표현
         if(!isRegexPassword(postUserReq.getPassword())){
             return new BaseResponse<>(POST_USERS_INVALID_PASSWORD);
         }
@@ -158,6 +159,38 @@ public class UserController {
     }
 
 
+
+    /**
+     * 아이디찾기후 비번바꾸기 API (users)
+     * [POST] /users/searchId/changePassword
+     * @return BaseResponse<PostUserRes>
+     */
+    // Body
+    @ResponseBody
+    @PostMapping("/searchId/changePassword") // (POST) localhost:9000/users/searchId/changePassword
+    public BaseResponse<PostUserRes> changePassword(@RequestBody PostUserPasswordReq postUserPasswordReq) {
+
+        if(postUserPasswordReq.getPassword().length() == 0 || postUserPasswordReq.getNewPassword().length() == 0 || postUserPasswordReq.getNewPasswordForCheck().length() == 0){
+            return new BaseResponse<>(POST_USERS_EMPTY_INFO);
+        }
+
+        // 비밀번호 정규표현
+        if(!isRegexPassword(postUserPasswordReq.getNewPassword())){
+            return new BaseResponse<>(POST_USERS_INVALID_PASSWORD);
+        }
+
+        if(! postUserPasswordReq.getNewPassword().equals(postUserPasswordReq.getNewPasswordForCheck())) {
+            return new BaseResponse<>(POST_USERS_UNMATCH_NEWPASSWORD);
+        }
+        try{
+            //System.out.println(postUserReq.getEmail() + "Asd");
+            PostUserRes postUserRes = userService.updatePassword(postUserPasswordReq);
+
+            return new BaseResponse<>(postUserRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
 
 //        if(postUserReq.getId() == null || postUserReq.getPassword() == null || postUserReq.getPasswordForCheck() == null || postUserReq.getName() == null || postUserReq.getNickName() == null || postUserReq.getPhone() == null || postUserReq.getEmail() == null){

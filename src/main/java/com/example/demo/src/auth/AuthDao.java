@@ -1,7 +1,8 @@
 package com.example.demo.src.auth;
 
-import com.example.demo.utils.FormatUtil;
+import com.example.demo.src.auth.model.PostAuthPasswordCheckReq;
 import com.example.demo.src.auth.model.User;
+import com.example.demo.utils.FormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,6 @@ public class AuthDao {
     }
 
     public User getPwd(String Id){
-        System.out.println(Id);
         String getPwdQuery = "select userIdx, id ,nickName, email, password from User Where id = ?";
         String getPwdParams = Id;
         //System.out.println(Id);
@@ -37,6 +37,16 @@ public class AuthDao {
         );
     }
 
+    public Integer checkId(String id){
+
+        System.out.println(id);
+        String checkIdQuery = "select exists(select id from User where id = ?) ";
+        Integer result = this.jdbcTemplate.queryForObject(checkIdQuery, int.class, id);
+        System.out.println(result);
+        return(result);
+    }
+
+
     public Integer checkInfo(String id, String phone){
 
         // Static은 ValidationRegex참고하고 여긴 Public으로 끌고옴
@@ -50,6 +60,13 @@ public class AuthDao {
         return(result);
     }
 
+    public Integer updateUserPassword(PostAuthPasswordCheckReq postAuthPasswordCheckReq){
+        String modifyUserPasswordQuery = "update User set password = ? where userIdx = ? ";
+        Object[] modifyUserPasswordParams = new Object[]{postAuthPasswordCheckReq.getPassword(), postAuthPasswordCheckReq.getUserIdx()};
+
+
+        return this.jdbcTemplate.update(modifyUserPasswordQuery,modifyUserPasswordParams);
+    }
 
 
 }

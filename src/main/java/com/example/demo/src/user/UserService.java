@@ -2,6 +2,7 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.user.model.PostUserPasswordReq;
 import com.example.demo.src.user.model.PostUserReq;
 import com.example.demo.src.user.model.PostUserRes;
 import com.example.demo.utils.JwtService;
@@ -104,6 +105,27 @@ public class UserService {
 
         try{
             int userIdx = userDao.createUserMbti(postUserReq);
+            return new PostUserRes("default", userIdx,"default" );
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostUserRes updatePassword(PostUserPasswordReq postUserPasswordReq) throws BaseException {
+
+        String comparePwd; //바꿀 비밀번호(확인용)
+        comparePwd = new SHA256().encrypt(postUserPasswordReq.getNewPassword());
+        int userIdx = postUserPasswordReq.getUserIdx();
+
+        // comparePwd랑 DB에 있는 pwd랑 비교하기
+        int searchResult = userDao.selectPwdByIdxForCompare(userIdx, comparePwd);
+        if (searchResult != 1){
+            throw new BaseException(POST_USERS_UNMATCH_PASSWORD);
+        }
+
+
+        try{
+            userDao.updateUserPwd(comparePwd, userIdx);
             return new PostUserRes("default", userIdx,"default" );
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
