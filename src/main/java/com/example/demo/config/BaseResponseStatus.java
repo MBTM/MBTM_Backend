@@ -45,6 +45,8 @@ public enum BaseResponseStatus {
     POST_USERS_EXISTS_EMAIL2(false,2038,"이미 존재하는 이메일입니다."),
     POST_USERS_NOT_EXISTS_ID(false,2039,"존재하지 않는 계정입니다."),
     POST_USERS_UNREGEX_PHONE(false,2040,"휴대폰 번호를 확인해주세요."),
+    POST_USERS_UNMATCH_NEWPASSWORD(false, 2041, "새로운 비밀번호가 서로 다릅니다."),
+
 
 
     /**
@@ -59,6 +61,7 @@ public enum BaseResponseStatus {
 
     // [POST] /auth
     FAILED_TO_SEND_SNS_AUTH_CODE(false,3015,"인증코드를 보내는데 실패하였습니다."),
+    FAILED_TO_UPDATE_PASSWORD(false, 3016, "비밀번호를 변경하는데 실패하였습니다."),
 
 
 
