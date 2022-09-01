@@ -113,19 +113,22 @@ public class UserService {
 
     public PostUserRes updatePassword(PostUserPasswordReq postUserPasswordReq) throws BaseException {
 
-        String comparePwd; //바꿀 비밀번호(확인용)
-        comparePwd = new SHA256().encrypt(postUserPasswordReq.getNewPassword());
+        String comparePwd; //비밀번호(확인용)
+        comparePwd = new SHA256().encrypt(postUserPasswordReq.getPassword());
         int userIdx = postUserPasswordReq.getUserIdx();
 
         // comparePwd랑 DB에 있는 pwd랑 비교하기
         int searchResult = userDao.selectPwdByIdxForCompare(userIdx, comparePwd);
+
         if (searchResult != 1){
             throw new BaseException(POST_USERS_UNMATCH_PASSWORD);
         }
 
+        String changePwd;
+        changePwd = new SHA256().encrypt(postUserPasswordReq.getNewPassword());
 
         try{
-            userDao.updateUserPwd(comparePwd, userIdx);
+            userDao.updateUserPwd(changePwd, userIdx);
             return new PostUserRes("default", userIdx,"default" );
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
