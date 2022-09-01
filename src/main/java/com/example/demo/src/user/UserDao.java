@@ -88,9 +88,9 @@ public class UserDao {
 
     }
 
-    public void updateUserPwd(String comparePwd, int userIdx){
+    public void updateUserPwd(String changePwd, int userIdx){
         String modifyUserPasswordQuery = "update User set password = ? where userIdx = ? ";
-        Object[] modifyUserPasswordParams = new Object[]{comparePwd, userIdx};
+        Object[] modifyUserPasswordParams = new Object[]{changePwd, userIdx};
         this.jdbcTemplate.update(modifyUserPasswordQuery,modifyUserPasswordParams);
 
 
