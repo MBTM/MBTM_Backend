@@ -54,7 +54,7 @@ public class AuthDao {
         FormatUtil formatUtils = new FormatUtil();
         String phoneForDBRegex = formatUtils.phoneFormat(phone);
 
-        String checkIdQuery = "select userIdx from User where id = ? and phone = ?";
+        String checkIdQuery = "select exists(select userIdx from User where id = ? and phone = ?);";
         Integer result = this.jdbcTemplate.queryForObject(checkIdQuery, int.class, id, phoneForDBRegex);
 
         return(result);
