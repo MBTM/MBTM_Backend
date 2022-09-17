@@ -60,9 +60,11 @@ public class AuthService {
 
     public PostAuthCodeRes certifiedPhoneNumber(PostAuthCodeReq postAuthCodeReq) throws BaseException{
 
+        System.out.println("여기1");
         Integer checkResult = authDao.checkInfo(postAuthCodeReq.getId(), postAuthCodeReq.getPhone() );
-
-        if(checkResult == null){
+        System.out.println("여기2");
+        System.out.println(checkResult);
+        if(checkResult == 0){
             throw new BaseException(BaseResponseStatus.POST_USERS_NOT_EXISTS_ID);
         }
 
